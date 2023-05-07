@@ -1,12 +1,14 @@
 import axios from "axios";
 import { useState } from "react";
 import { ErrorToast } from "../toast/toasts";
+import { BASE_URL } from "../../utils/constants";
 
 const Register = ({ onRouteChange, loadUser }) => {
     
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
+    const [loading, setLoading] = useState(false);
 
 
     const onNameChange = (e) => {
@@ -23,8 +25,9 @@ const Register = ({ onRouteChange, loadUser }) => {
 
     
     const onSubmitSignIn = () => {
+        setLoading(true);
         console.log(email, password, name);
-        axios.post('http://localhost:3000/register', {
+        axios.post(`${BASE_URL}/register`, {
             email,
             password,
             name
@@ -35,13 +38,15 @@ const Register = ({ onRouteChange, loadUser }) => {
             } 
           })
           .then((user) => {
+            setLoading(false);
             if (user.data.id) {
                 loadUser(user.data);
                 onRouteChange('home');
             }
           })
           .catch(err => {
-            ErrorToast(err.response.data);
+            setLoading(false);
+            ErrorToast(err.response.data  || "Error occurred");
             console.log(err.response.data);
         });
     }
@@ -86,9 +91,10 @@ const Register = ({ onRouteChange, loadUser }) => {
                 <div className="">
                 <input 
                     onClick={onSubmitSignIn}
+                    disabled={loading}
                     className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" 
                     type="submit" 
-                    value="Register" 
+                    value={loading ? "Loading..." : "Register"} 
                 />
                 </div>
                 <div className="lh-copy mt3">

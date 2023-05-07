@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useState } from "react";
 import { ErrorToast } from "../toast/toasts";
+import { BASE_URL } from "../../utils/constants";
 
 const Signin = ({ onRouteChange, loadUser  }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
 
 
     const onEmailChange = (e) => {
@@ -16,7 +18,8 @@ const Signin = ({ onRouteChange, loadUser  }) => {
     }
 
     const onSubmitSignIn = () => {
-        axios.post('http://localhost:3000/signin', {
+        setLoading(true);
+        axios.post(`${BASE_URL}/signin`, {
             email,
             password
           },
@@ -27,13 +30,15 @@ const Signin = ({ onRouteChange, loadUser  }) => {
           })
           .then((user) => {
             if (user.data.id) {
-                loadUser(user.data)
+                setLoading(false);
+                loadUser(user.data);
                 onRouteChange('home');
             }
           })
           .catch(err => {
-            ErrorToast(err.response.data);
-            console.log(err.response.data);
+            setLoading(true);
+            ErrorToast( err?.response?.data || "Error signing in");
+            console.log(err);
         });
     }
 
@@ -64,9 +69,10 @@ const Signin = ({ onRouteChange, loadUser  }) => {
                 <div className="">
                 <input 
                     onClick={onSubmitSignIn}
+                    disabled={loading}
                     className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" 
                     type="submit" 
-                    value="Sign in" 
+                    value={ loading ? "Loading..." : "Sign in"} 
                 />
                 </div>
                 <div className="lh-copy mt3">

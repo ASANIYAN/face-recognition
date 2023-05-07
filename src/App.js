@@ -9,6 +9,7 @@ import { useState } from 'react';
 import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
 import { ErrorToast, SuccessToast } from './components/toast/toasts';
+import { BASE_URL } from './utils/constants';
 
 const particleOptions = {
   type: "cobweb",
@@ -24,6 +25,7 @@ function App() {
   const [ box, setBox ] = useState([]);
   const [ route, setRoute ] = useState('signin');
   const [ isSignedIn, setIsSignedIn ] = useState(false);
+  const [ loading, setLoading ] = useState(false);
   const [ user, setUser ] = useState({
     id: '',
     name: '',
@@ -84,10 +86,11 @@ function App() {
   };
 
   const onPictureSubmit = () => {
+    setLoading(true);
     displayFaceBox([]);
     setImageUrl(input);
     // console.log('click');
-    fetch('http://localhost:3000/imageurl',  {
+    fetch(`${BASE_URL}/imageurl`,  {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -99,7 +102,7 @@ function App() {
     .then(res => res.json())    
     .then((response) => {
           if (response !== 'Failed to complete detection') {
-            fetch('http://localhost:3000/image', {
+            fetch(`${BASE_URL}/image`, {
               method: 'PUT',
               headers: {
                 'Content-Type': 'application/json',
@@ -114,16 +117,18 @@ function App() {
                 ...user,
                 entries: count
               }))
+              setLoading(false);
             })
             .catch(err => {
               ErrorToast(err)
+              setLoading(false);
               console.log(err)
             })
             const regions = response?.outputs[0].data?.regions?.map(item => item.region_info.bounding_box);
             const LocatedFaces = [];
             regions?.map(item => LocatedFaces.push(calculateFaceLocation(item)));
             displayFaceBox(LocatedFaces);
-            SuccessToast('Face detected Successfully');
+            SuccessToast('Operation Successful');
           } else {
             ErrorToast(response);
           }
@@ -136,7 +141,6 @@ function App() {
 
   const onRouteChange = (route) => {
     if (route === 'signout') {
-      // adding redux later => this will be an extra reducer
       resetState();
     } else if (route === 'home') {
       setIsSignedIn(true);
@@ -155,7 +159,7 @@ function App() {
         <>
           <Logo /> 
           <Rank name={user.name} entries={user.entries} />
-          <ImageLinkForm onInputChange={onInputChange} onPictureSubmit={onPictureSubmit} />
+          <ImageLinkForm loading={loading} onInputChange={onInputChange} onPictureSubmit={onPictureSubmit} />
           <FaceRecognition boxes={box} imageUrl={imageUrl} />
         </>
         : (
