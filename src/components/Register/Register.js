@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { ErrorToast } from "../toast/toasts";
+import { ErrorToast, SuccessToast } from "../toast/toasts";
 import { BASE_URL } from "../../utils/constants";
 
 const Register = ({ onRouteChange, loadUser }) => {
@@ -39,10 +39,12 @@ const Register = ({ onRouteChange, loadUser }) => {
           })
           .then((user) => {
             setLoading(false);
-            if (user.data.id) {
-                loadUser(user.data);
-                onRouteChange('home');
-            }
+            SuccessToast("Registration Successful")
+            onRouteChange('signin');
+            // if (user.data.id) {
+            //     loadUser(user.data);
+            //     onRouteChange('home');
+            // }
           })
           .catch(err => {
             setLoading(false);

@@ -29,14 +29,15 @@ const Signin = ({ onRouteChange, loadUser  }) => {
             } 
           })
           .then((user) => {
-            if (user.data.id) {
+            if (user.data.data.id) {
                 setLoading(false);
-                loadUser(user.data);
+                localStorage.setItem("token", user.data.accessToken)
+                loadUser(user.data.data);
                 onRouteChange('home');
             }
           })
           .catch(err => {
-            setLoading(true);
+            setLoading(false);
             ErrorToast( err?.response?.data || "Error signing in");
             console.log(err);
         });

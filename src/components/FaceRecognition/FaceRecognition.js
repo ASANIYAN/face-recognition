@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import './FaceRecognition.css'
 
 const FaceRecognition = ({ imageUrl, boxes }) => {
+    console.log(boxes);
+    console.log(imageUrl);
     useEffect(() => {
         window.scrollTo({
             top: document.getElementById('image-section').offsetTop,
@@ -18,7 +20,7 @@ const FaceRecognition = ({ imageUrl, boxes }) => {
                 width={'500px'}
                 height={'auto'}
                 />
-                { boxes && boxes.map((box, id) => (
+                { boxes.length > 0 && boxes.map((box, id) => (
                     <div
                     key={id} 
                     className="bounding-box"
