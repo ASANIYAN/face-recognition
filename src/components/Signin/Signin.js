@@ -39,7 +39,6 @@ const Signin = ({ onRouteChange, loadUser  }) => {
           .catch(err => {
             setLoading(false);
             ErrorToast( err?.response?.data || "Error signing in");
-            console.log(err);
         });
     }
 

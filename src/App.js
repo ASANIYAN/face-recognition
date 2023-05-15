@@ -56,7 +56,7 @@ function App() {
     const image = document.getElementById('inputImage');
     const width = Number(image.width);
     const height = Number(image.height);
-    console.log(width, "&", height);
+
     return {
       leftCol: clarifaiFace.left_col * width,
       topRow: clarifaiFace.top_row * height,
@@ -122,7 +122,6 @@ function App() {
             .catch(err => {
               ErrorToast(err)
               setLoading(false);
-              console.log(err)
             })
             SuccessToast('Operation Successful');
             const regions = response?.outputs[0].data?.regions?.map(item => item.region_info.bounding_box);
@@ -135,7 +134,6 @@ function App() {
         })
         .catch(error =>  {
           ErrorToast(error);
-          console.log(error)
         });
   }
 
@@ -167,7 +165,6 @@ function App() {
       })
       .catch(err => {
         resetState();
-        console.log(err);
       })
     } else {
       resetState();

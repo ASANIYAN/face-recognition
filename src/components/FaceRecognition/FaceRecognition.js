@@ -2,8 +2,6 @@ import { useEffect } from 'react';
 import './FaceRecognition.css'
 
 const FaceRecognition = ({ imageUrl, boxes }) => {
-    console.log(boxes);
-    console.log(imageUrl);
     useEffect(() => {
         window.scrollTo({
             top: document.getElementById('image-section').offsetTop,

@@ -26,7 +26,6 @@ const Register = ({ onRouteChange, loadUser }) => {
     
     const onSubmitSignIn = () => {
         setLoading(true);
-        console.log(email, password, name);
         axios.post(`${BASE_URL}/register`, {
             email,
             password,
@@ -49,7 +48,6 @@ const Register = ({ onRouteChange, loadUser }) => {
           .catch(err => {
             setLoading(false);
             ErrorToast(err.response.data  || "Error occurred");
-            console.log(err.response.data);
         });
     }
 
